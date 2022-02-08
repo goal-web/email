@@ -63,7 +63,7 @@ func (this *Mailer) Queue(mail contracts.Mailable, queue ...string) error {
 	return this.queue.Push(&Job{
 		UUID:      fmt.Sprintf("email:%s-%s", utils.RandStr(10), mail.GetSubject()),
 		CreatedAt: time.Now().Unix(),
-		Mail:      mail,
+		Mail:      ConvertToMail(mail),
 	})
 }
 
@@ -71,6 +71,6 @@ func (this *Mailer) Later(delay int, mail contracts.Mailable, queue ...string) e
 	return this.queue.Later(time.Now().Add(time.Duration(delay)*time.Second), &Job{
 		UUID:      fmt.Sprintf("email:%s-%s", utils.RandStr(10), mail.GetSubject()),
 		CreatedAt: time.Now().Unix(),
-		Mail:      mail,
+		Mail:      ConvertToMail(mail),
 	}, queue...)
 }

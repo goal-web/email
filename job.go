@@ -27,7 +27,7 @@ type Job struct {
 	Timeout       int
 	RetryInterval int
 
-	Mail contracts.Mailable
+	Mail *Mail
 
 	mailer contracts.Mailer
 }

@@ -2,6 +2,23 @@ package email
 
 import "github.com/goal-web/contracts"
 
+func ConvertToMail(mailable contracts.Mailable) *Mail {
+	if mail, ok := mailable.(*Mail); ok {
+		return mail
+	}
+	return &Mail{
+		From:    mailable.GetFrom(),
+		Subject: mailable.GetSubject(),
+		Text:    mailable.GetText(),
+		Html:    mailable.GetHtml(),
+		To:      mailable.GetTo(),
+		Cc:      mailable.GetCc(),
+		Bcc:     mailable.GetBcc(),
+		queue:   mailable.GetQueue(),
+		delay:   mailable.GetDelay(),
+	}
+}
+
 func New(subject string, content contracts.EmailContent) contracts.Mailable {
 	return &Mail{
 		Subject: subject,
