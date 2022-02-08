@@ -1,6 +1,7 @@
 package email
 
 import (
+	"crypto/tls"
 	"fmt"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/supports/utils"
@@ -10,11 +11,12 @@ import (
 )
 
 type Mailer struct {
-	name    string
-	auth    smtp.Auth
-	from    string
-	address string
-	queue   contracts.Queue
+	name      string
+	auth      smtp.Auth
+	from      string
+	address   string
+	queue     contracts.Queue
+	tlsConfig *tls.Config
 }
 
 func (this *Mailer) Raw(subject, text string, to []string) error {
@@ -45,6 +47,11 @@ func (this *Mailer) Send(mail contracts.Mailable) error {
 	newEmail.Subject = mail.GetSubject()
 	newEmail.Text = []byte(mail.GetText())
 	newEmail.HTML = []byte(mail.GetHtml())
+
+	if this.tlsConfig != nil {
+		return newEmail.SendWithStartTLS(this.address, this.auth, this.tlsConfig)
+	}
+
 	return newEmail.Send(this.address, this.auth)
 }
 

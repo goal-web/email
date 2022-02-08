@@ -1,6 +1,7 @@
 package email
 
 import (
+	"crypto/tls"
 	"fmt"
 	"github.com/goal-web/contracts"
 	"github.com/goal-web/supports/utils"
@@ -20,9 +21,12 @@ func (service *ServiceProvider) Register(application contracts.Application) {
 			mailers: map[string]contracts.Mailer{},
 			drivers: map[string]contracts.MailerDriver{
 				"mailer": func(name string, config contracts.Fields) contracts.Mailer {
+
+					tlsConfig, _ := config["tls"].(*tls.Config)
 					return &Mailer{
-						name: name,
-						from: utils.GetStringField(config, "from"),
+						name:      name,
+						tlsConfig: tlsConfig,
+						from:      utils.GetStringField(config, "from"),
 						auth: smtp.PlainAuth(
 							utils.GetStringField(config, "identity"),
 							utils.GetStringField(config, "username"),
