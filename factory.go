@@ -25,13 +25,13 @@ func (factory *Factory) getMailer(name string) contracts.Mailer {
 	if factory.mailers[name] == nil {
 		config := factory.config.Mailers[name]
 		if config == nil {
-			panic(Exception{Exception: exceptions.New("factory.getMailer: mailer does not exist", nil)})
+			panic(Exception{Exception: exceptions.New("factory.getMailer: mailer does not exist", config)})
 		}
 
 		if driver, ok := factory.drivers[utils.GetStringField(config, "driver")]; ok {
 			factory.mailers[name] = driver(name, config)
 		} else {
-			panic(Exception{Exception: exceptions.New("factory.getMailer: driver does not exist", nil)})
+			panic(Exception{Exception: exceptions.New("factory.getMailer: driver does not exist", config)})
 		}
 	}
 
