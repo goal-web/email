@@ -2,6 +2,8 @@ package email
 
 import (
 	"github.com/goal-web/contracts"
+	"github.com/goal-web/supports/exceptions"
+	"github.com/goal-web/supports/utils"
 )
 
 type Factory struct {
@@ -21,13 +23,21 @@ func (factory *Factory) Mailer(name ...string) contracts.Mailer {
 
 func (factory *Factory) getMailer(name string) contracts.Mailer {
 	if factory.mailers[name] == nil {
+		config := factory.config.Mailers[name]
+		if config == nil {
+			panic(Exception{Exception: exceptions.New("factory.getMailer: mailer does not exist", nil)})
+		}
 
+		if driver, ok := factory.drivers[utils.GetStringField(config, "driver")]; ok {
+			factory.mailers[name] = driver(name, config)
+		} else {
+			panic(Exception{Exception: exceptions.New("factory.getMailer: driver does not exist", nil)})
+		}
 	}
 
 	return factory.mailers[name]
 }
 
 func (factory *Factory) Extend(name string, driver contracts.MailerDriver) {
-	//TODO implement me
-	panic("implement me")
+	factory.drivers[name] = driver
 }

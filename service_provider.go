@@ -22,6 +22,7 @@ func (service *ServiceProvider) Register(application contracts.Application) {
 				"mailer": func(name string, config contracts.Fields) contracts.Mailer {
 					return &Mailer{
 						name: name,
+						from: utils.GetStringField(config, "from"),
 						auth: smtp.PlainAuth(
 							utils.GetStringField(config, "identity"),
 							utils.GetStringField(config, "username"),

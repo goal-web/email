@@ -12,13 +12,14 @@ import (
 type Mailer struct {
 	name    string
 	auth    smtp.Auth
+	from    string
 	address string
 	queue   contracts.Queue
 }
 
 func (this *Mailer) Raw(subject, text string, to []string) error {
 	newEmail := email.NewEmail()
-	newEmail.From = this.address
+	newEmail.From = this.from
 	newEmail.To = to
 	newEmail.Subject = subject
 	newEmail.Text = []byte(text)
@@ -31,7 +32,13 @@ func (this *Mailer) Send(mail contracts.Mailable) error {
 		return this.Queue(mail, mail.GetQueue())
 	}
 	newEmail := email.NewEmail()
+
 	newEmail.From = mail.GetFrom()
+
+	if newEmail.From == "" {
+		newEmail.From = this.from
+	}
+
 	newEmail.To = mail.GetTo()
 	newEmail.Cc = mail.GetCc()
 	newEmail.Bcc = mail.GetBcc()
