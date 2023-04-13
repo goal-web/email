@@ -12,6 +12,10 @@ type ServiceProvider struct {
 	app contracts.Application
 }
 
+func NewService() contracts.ServiceProvider {
+	return &ServiceProvider{}
+}
+
 func (service *ServiceProvider) Register(application contracts.Application) {
 	service.app = application
 

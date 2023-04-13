@@ -10,7 +10,7 @@ import (
 var JobFailedErr = errors.New("job failed")
 
 var (
-	JobClass = class.Make(new(Job))
+	JobClass = class.Any(Job{})
 )
 
 type Job struct {
@@ -29,7 +29,7 @@ type Job struct {
 
 	Mail *Mail
 
-	mailer contracts.Mailer
+	mailer contracts.Mailer `json:"-"`
 }
 
 func (job *Job) Construct(container contracts.Container) {

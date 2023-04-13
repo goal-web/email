@@ -1,7 +1,7 @@
 package email
 
-import "github.com/goal-web/contracts"
+import (
+	"github.com/goal-web/supports/exceptions"
+)
 
-type Exception struct {
-	contracts.Exception
-}
+type Exception = exceptions.Exception

@@ -1,8 +1,8 @@
 package email
 
 import (
+	"errors"
 	"github.com/goal-web/contracts"
-	"github.com/goal-web/supports/exceptions"
 	"github.com/goal-web/supports/utils"
 )
 
@@ -25,13 +25,13 @@ func (factory *Factory) getMailer(name string) contracts.Mailer {
 	if factory.mailers[name] == nil {
 		config := factory.config.Mailers[name]
 		if config == nil {
-			panic(Exception{Exception: exceptions.New("factory.getMailer: mailer does not exist", config)})
+			panic(Exception{Err: errors.New("factory.getMailer: mailer does not exist")})
 		}
 
 		if driver, ok := factory.drivers[utils.GetStringField(config, "driver")]; ok {
 			factory.mailers[name] = driver(name, config)
 		} else {
-			panic(Exception{Exception: exceptions.New("factory.getMailer: driver does not exist", config)})
+			panic(Exception{Err: errors.New("factory.getMailer: mailer does not exist")})
 		}
 	}
 
